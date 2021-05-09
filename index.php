@@ -59,7 +59,7 @@
 
       </form>
 
-      <p>Already A User ? Log In !</p>
+      <p id="alreadyLogged">Already A User ? Log In !</p>
 
       <button title="Already A User ?" class="btn btn-info" id="logInChoice">Log In</button>
 
@@ -94,19 +94,22 @@
   </div>
 
   <script type="text/javascript">
+    
     $("#signUpChoice").hide();
 
     $("#logInChoice").click(function(){
       $("#signingUp").toggle(); 
       $("#logInChoice").toggle();
       $("#signUpChoice").toggle();
-      $("#loggingIn").toggle();    
+      $("#loggingIn").toggle();  
+      $("#alreadyLogged").toggle();  
     });
 
     $("#signUpChoice").click(function(){
       $("#signingUp").toggle(); 
       $("#logInChoice").toggle();
       $("#signUpChoice").toggle();
+      $("#alreadyLogged").toggle();  
       $("#loggingIn").toggle();    
     });
 
