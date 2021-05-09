@@ -4,11 +4,14 @@ $diaryContent = "";
 if (array_key_exists("id", $_COOKIE)) {
     $_SESSION['id'] = $_COOKIE['id'];
 }
+
 if (array_key_exists("id", $_SESSION)) {
     include("databaseConnecting.php");
-    $query = "SELECT * FROM `users` WHERE `id`='" . mysqli_real_escape_string($link, $_SESSION['id']) . "' LIMIT 1";
+    $num=mysqli_insert_id($link)+1;
+    $query = "SELECT * FROM `users` WHERE `id`='" . mysqli_real_escape_string($link,$num) . "' LIMIT 1";
     $result = mysqli_query($link, $query);
     $row = mysqli_fetch_array($result);
+
     $diaryContent = $row['diary'];
     echo '<div class="container-fluid">
                 <nav class="navbar navbar-fixed-top navbar-expand-sm navbar-dark bg-primary">
@@ -19,13 +22,13 @@ if (array_key_exists("id", $_SESSION)) {
                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     </ul>
                     <div class="inline my-2 my-lg-0">
-                    <a href="Secret Diary.php?logout=1"><button class="btn btn-success my-2 my-sm-0">Logout</button></a>
+                    <a href="index.php?logout=1"><button class="btn btn-success my-2 my-sm-0">Logout</button></a>
                     </div>
                 </div>
              </nav>
              </div>';
 } else {
-    header("Location:Secret Diary.php");
+    header("Location:index.php");
 }
 ?>
 
@@ -56,7 +59,7 @@ if (array_key_exists("id", $_SESSION)) {
                     content: $("#diary").val()
                 }
             }).fail(function() {
-                alert("NO  data reached .");
+                alert("NO data reached .");
             });
         });
     </script>

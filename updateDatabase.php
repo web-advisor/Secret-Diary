@@ -6,7 +6,4 @@
         mysqli_query($link,$query);
         #echo $_POST['content'];
     }
-
-
-
 ?>
