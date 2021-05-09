@@ -89,8 +89,8 @@
         <button type="submit" name="submit" class="btn btn-success" style="margin-top:8px;">Log In</button>
     
     </form>
+    <p id="newUser">New User ? Sign Up Now ..</p>
     <button title="New User ?" class="btn btn-info" id="signUpChoice" style="margin-top:8px;">Sign Up</button>
-
   </div>
 
   <script type="text/javascript">
@@ -102,7 +102,8 @@
       $("#logInChoice").toggle();
       $("#signUpChoice").toggle();
       $("#loggingIn").toggle();  
-      $("#alreadyLogged").toggle();  
+      $("#alreadyLogged").toggle();
+      $("#newUser").toggle();  
     });
 
     $("#signUpChoice").click(function(){
@@ -110,6 +111,7 @@
       $("#logInChoice").toggle();
       $("#signUpChoice").toggle();
       $("#alreadyLogged").toggle();  
+      $("#newUser").toggle();  
       $("#loggingIn").toggle();    
     });
 
