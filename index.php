@@ -96,6 +96,7 @@
   <script type="text/javascript">
     
     $("#signUpChoice").hide();
+    $("#newUser").hide();  
 
     $("#logInChoice").click(function(){
       $("#signingUp").toggle(); 
