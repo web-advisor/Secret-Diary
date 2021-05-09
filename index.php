@@ -1,5 +1,81 @@
 <?php
-  
+  $error="";
+  if(array_key_exists("submit",$_POST)){
+    // Error Handling 
+    if($_POST['email']==""){
+      $error.="<p>Email required.</p>";
+    }
+    if($_POST['password']==""){
+      $error.="<p>Password required.</p>";
+    }
+
+    // Connecting Database 
+    include("databaseConnecting.php");     
+        
+    if(!$error==""){
+      // Error Reporting
+      $error="<div class='alert alert-danger' role='alert'><p style='font-weight:800;'>Your Form has the Following Mistakes :</p>".$error."</div>";
+    }else{
+      // No Errors. Flow of Control
+      if($_POST['signUp']=="1"){
+        // Sign Up Process : 
+
+        // Checking if Email already Exists
+        $query="SELECT `id` FROM `users` WHERE `email`='$_POST[email]' LIMIT 1";
+        // $result=mysqli_query($link,$query);
+        // if(mysqli_num_rows($result)>0){
+        //     // IF Exists 
+        //     $error.="<p class='alert alert-warning' role='alert'>Your Email Id is already present in the Database</p>";
+        // }else{
+        //     // IF not Exists
+        //     $query="INSERT into `users`(`email`,`password`) VALUES('".mysqli_real_escape_string($link,$_POST['email'])."','".mysqli_real_escape_string($link,$_POST['password'])."')";
+        //     $result=mysqli_query($link,$query);
+        //     if(!$result){
+        //         // Some error in running INSERT Operation
+        //         $error.="Could not Sign You Up ! Please Try again later.";
+        //     }else{
+        //         // Control Flow 
+
+        //         // Password Encryption
+        //         $encrypt=md5(md5(mysqli_insert_id($link)).$_POST['password']);
+        //         $id=mysqli_insert_id($link);
+        //         $query="UPDATE `users` SET `password`='$encrypt' WHERE `id`='$id'";
+        //         mysqli_query($link,$query);
+        //         $_SESSION['id']=$id;
+
+        //         // Once Logged In , Set Cookie --> Here for 1 year 
+        //         if($_POST['loggedIn']=='1'){
+        //           setcookie('id','$id',time()+(60*60*24*365));
+        //         }
+
+        //         // head over to Diary Page 
+        //         header("Location:diaryPage.php");
+        //         # echo "<div class='alert alert-success' role='alert'>Successfully Signed Up !!</div>";
+        //     }
+        // }
+      }
+      // else{
+      //   // Sign in Process : 
+      //   $query="SELECT * FROM `users` WHERE `email`='".mysqli_real_escape_string($link,$_POST['email'])."'";
+      //   $result=mysqli_query($link,$query);
+      //   $row=mysqli_fetch_array($result);
+      //   if(isset($row)){
+      //     $hashedPassword=md5(md5($row['id']).$_POST['password']);
+      //     if($hashedPassword==$row['password']){
+      //       $_SESSION['id']=$row['id'];
+      //       if($_POST['loggedIn']=='1'){
+      //         setcookie('id',$row['id'],time()+(60*60*24*365));
+      //       }
+      //       header("Location:diaryPage.php");
+      //     }else{
+      //       $error="<div class='alert alert-danger' role='alert'>Your password did not match !!</div>";
+      //     }
+      //   }else{
+      //     $error="<div class='alert alert-danger' role='alert'>Email Couldn't be found !!</div>";
+      //   }
+      // } 
+    }
+  }
 ?>
 
 <?php include("Header.php"); ?>
