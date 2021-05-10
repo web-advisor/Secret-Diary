@@ -24,7 +24,7 @@
         // Sign Up Process : 
 
         // Checking if Email already Exists
-        $query="SELECT `id` FROM `users` WHERE `email`=\'".mysqli_real_escape_string($link,$_POST['email'])."\' LIMIT 1";
+        $query="SELECT `id` FROM `users` WHERE `email`='".mysqli_real_escape_string($link,$_POST['email'])."' LIMIT 1";
         if($result=mysqli_query($link,$query))
         if(mysqli_num_rows($result)>0){
             // IF Exists 
