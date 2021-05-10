@@ -33,7 +33,7 @@
 
             print_r($_POST);
             // IF not Exists, Control Flow.. Add email password to the Database
-            $query="INSERT into `users` (`id`,`email`,`password`,`diary`) VALUES (3,\'".mysqli_real_escape_string($link,$_POST['email'])."\',\'".mysqli_real_escape_string($link,$_POST['password'])."\',\'".mysqli_real_escape_string($link,$_POST['submit'])."\')";
+            $query="INSERT into `users` (`id`,`email`,`password`,`diary`) VALUES (3,\'".mysqli_real_escape_string($link,$_POST['email'])."\',\'".mysqli_real_escape_string($link,$_POST['password'])."\',\'Just a Diary\')";
             // $query="INSERT into `users`(`email`,`password`) VALUES ('".$_POST['email']."','".$_POST['password']."')";
             $result=mysqli_query($link,$query);
             if(!$result){
