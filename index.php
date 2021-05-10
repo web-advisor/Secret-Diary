@@ -29,34 +29,35 @@
         if(mysqli_num_rows($result)>0){
             // IF Exists 
             $error.="<p class='alert alert-warning' role='alert'>Your Email Id is already present in the Database</p>";
-        }
-        // else{
-        //     // IF not Exists
-        //     $query="INSERT into `users`(`email`,`password`) VALUES('".mysqli_real_escape_string($link,$_POST['email'])."','".mysqli_real_escape_string($link,$_POST['password'])."')";
-        //     $result=mysqli_query($link,$query);
-        //     if(!$result){
-        //         // Some error in running INSERT Operation
-        //         $error.="Could not Sign You Up ! Please Try again later.";
-        //     }else{
-        //         // Control Flow 
+        }else{
+            // IF not Exists
+            $query="INSERT into `users`(`email`,`password`) VALUES('".mysqli_real_escape_string($link,$_POST['email'])."','".mysqli_real_escape_string($link,$_POST['password'])."')";
+            $result=mysqli_query($link,$query);
+            if(!$result){
+                // Some error in running INSERT Operation
+                $error.="Could not Sign You Up ! Please Try again later.";
+            }else{
+                // Control Flow 
 
-        //         // Password Encryption
-        //         $encrypt=md5(md5(mysqli_insert_id($link)).$_POST['password']);
-        //         $id=mysqli_insert_id($link);
-        //         $query="UPDATE `users` SET `password`='$encrypt' WHERE `id`='$id'";
-        //         mysqli_query($link,$query);
-        //         $_SESSION['id']=$id;
+                // Password Encryption
+                $encrypt=md5(md5(mysqli_insert_id($link)).$_POST['password']);
+                $id=mysqli_insert_id($link);
+                $encryptQuery="UPDATE `users` SET `password`='".$encrypt."' WHERE `id`='".$id."'";
+                if($encryptResult=mysqli_query($link,$encryptQuery)){
+                $_SESSION['id']=$id;
 
-        //         // Once Logged In , Set Cookie --> Here for 1 year 
+                // Once Logged In , Set Cookie --> Here for 1 year 
         //         if($_POST['loggedIn']=='1'){
         //           setcookie('id','$id',time()+(60*60*24*365));
         //         }
 
         //         // head over to Diary Page 
         //         header("Location:diaryPage.php");
-        //         # echo "<div class='alert alert-success' role='alert'>Successfully Signed Up !!</div>";
-        //     }
-        // }
+                   echo "<div class='alert alert-success' role='alert'>Successfully Signed Up !!</div>";
+                }
+            }
+          }
+        
       }
       // else{
       //   // Sign in Process : 
