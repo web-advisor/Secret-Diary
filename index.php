@@ -35,7 +35,7 @@
             $result=mysqli_query($link,$query);
             if(!$result){
                 // Some error in running INSERT Operation
-                $error.="Could not Sign You Up ! Please Try again later.";
+                $error.="<div class='alert alert-danger' role='alert'>Could not Sign You Up ! Please Try again later. It's not you, it's us ..</div>";
             }else{
                 // Control Flow 
 
