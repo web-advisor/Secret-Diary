@@ -35,8 +35,8 @@
             // IF not Exists, Control Flow.. Add email password to the Database
             $signInQuery="INSERT INTO `users` (`email`,`password`) VALUES ('".mysqli_real_escape_string($link,$_POST['email'])."','".mysqli_real_escape_string($link,$_POST['password'])."')";
             // $query="INSERT into `users`(`email`,`password`) VALUES ('".$_POST['email']."','".$_POST['password']."')";
-            $signInResult=mysqli_query($link,$signInQuery);
-            if(!$signInResult){
+            if(!($signInResult=mysqli_query($link,$signInQuery))){
+            // if(!$signInResult){
                 // Some error in running INSERT Operation
                 $error.="<div class='alert alert-danger' role='alert'>Could not Sign You Up ! Please Try again later. It's not you, it's us ..</div>";
             }else{
