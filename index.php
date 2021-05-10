@@ -1,6 +1,9 @@
 <?php
   $error="";
+
+  // If submit  ( Either Loggin or Sign Up is pressed )
   if(array_key_exists("submit",$_POST)){
+
     // Error Handling 
     if($_POST['email']==""){
       $error.="<p>Email required.</p>";
@@ -23,10 +26,11 @@
         // Checking if Email already Exists
         $query="SELECT `id` FROM `users` WHERE `email`='".mysqli_real_escape_string($link,$_POST['email'])."' LIMIT 1";
         $result=mysqli_query($link,$query);
-        // if(mysqli_num_rows($result)>0){
-        //     // IF Exists 
-        //     $error.="<p class='alert alert-warning' role='alert'>Your Email Id is already present in the Database</p>";
-        // }else{
+        if(mysqli_num_rows($result)>0){
+            // IF Exists 
+            $error.="<p class='alert alert-warning' role='alert'>Your Email Id is already present in the Database</p>";
+        }
+        // else{
         //     // IF not Exists
         //     $query="INSERT into `users`(`email`,`password`) VALUES('".mysqli_real_escape_string($link,$_POST['email'])."','".mysqli_real_escape_string($link,$_POST['password'])."')";
         //     $result=mysqli_query($link,$query);
