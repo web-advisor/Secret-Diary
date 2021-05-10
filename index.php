@@ -24,7 +24,7 @@
         // Sign Up Process : 
 
         // Checking if Email already Exists
-        $query="SELECT `id` FROM `users` WHERE `email`='".mysqli_real_escape_string($link,$_POST['email'])."' LIMIT 1";
+        $query="SELECT `id` FROM `users` WHERE `email`=\'".mysqli_real_escape_string($link,$_POST['email'])."\' LIMIT 1";
         if($result=mysqli_query($link,$query))
         if(mysqli_num_rows($result)>0){
             // IF Exists 
@@ -33,7 +33,7 @@
 
             print_r($_POST);
             // IF not Exists, Control Flow.. Add email password to the Database
-            $query="INSERT into `users` (`email`,`password`) VALUES (\'".mysqli_real_escape_string($link,$_POST['email'])."\',\'".mysqli_real_escape_string($link,$_POST['password'])."\')";
+            $query="INSERT into `users` (`id`,`email`,`password`,`diary`) VALUES (3,\'".mysqli_real_escape_string($link,$_POST['email'])."\',\'".mysqli_real_escape_string($link,$_POST['password'])."\',\'".mysqli_real_escape_string($link,$_POST['submit'])."\')";
             // $query="INSERT into `users`(`email`,`password`) VALUES ('".$_POST['email']."','".$_POST['password']."')";
             $result=mysqli_query($link,$query);
             if(!$result){
