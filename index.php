@@ -30,7 +30,9 @@
             // IF Exists 
             $error.="<p class='alert alert-warning' role='alert'>Your Email Id is already present in the Database</p>";
         }else{
-            // IF not Exists
+
+            print_r($_POST);
+            // IF not Exists, Control Flow.. Add email password to the Database
             $query="INSERT into `users`(`email`,`password`) VALUES('".mysqli_real_escape_string($link,$_POST['email'])."','".mysqli_real_escape_string($link,$_POST['password'])."')";
             $result=mysqli_query($link,$query);
             if(!$result){
