@@ -1,92 +1,97 @@
 <?php
+  session_start();
+
+  # For Maintaining Errors
   $error="";
 
-  // If submit  ( Either Loggin or Sign Up is pressed )
-  if(array_key_exists("submit",$_POST)){
-
-    // Error Handling 
-    if($_POST['email']==""){
-      $error.="<p>Email required.</p>";
-    }
-    if($_POST['password']==""){
-      $error.="<p>Password required.</p>";
+    if(array_key_exists("logout",$_GET)){
+      // if($_GET["logout"]==1){
+      unset($_SESSION);
+      setcookie("id","",time()-(60*60));
+      $_COOKIE['id']="";
+    }else if((array_key_exists("id",$_SESSION) AND $_SESSION['id'])OR(array_key_exists("id",$_COOKIE) AND $_COOKIE['id'])){
+      header("Location:dairyPage.php");
     }
 
-    // Connecting Database 
-    include("databaseConnecting.php");     
+    if(array_key_exists("submit",$_POST)){
+
+      // Connecting Database 
+        include("databaseConnecting.php");     
         
-    if(!$error==""){
-      // Error Reporting
-      $error="<div class='alert alert-danger' role='alert'><p style='font-weight:800;'>Your Form has the Following Mistakes :</p>".$error."</div>";
-    }else{
-      // No Errors. Flow of Control
-      if($_POST['signUp']=="1"){
-        // Sign Up Process : 
+      // Error Handling 
+        if($_POST['email']==""){
+            $error.="<p>Email required.</p>";
+        }
+        if($_POST['password']==""){
+            $error.="<p>Password required.</p>";
+        }
 
-        // Checking if Email already Exists
-        $query="SELECT `id` FROM `users` WHERE `email`='".mysqli_real_escape_string($link,$_POST['email'])."' LIMIT 1";
-        if($result=mysqli_query($link,$query))
-        if(mysqli_num_rows($result)>0){
-            // IF Exists 
-            $error.="<p class='alert alert-warning' role='alert'>Your Email Id is already present in the Database</p>";
+        if(!$error==""){
+          // Error Reporting
+        $error="<div class='alert alert-danger' role='alert'><p style='font-weight:800;'>Your Form has the Following Mistakes :</p>".$error."</div>";
         }else{
+          // No Errors. Flow of Control
+          if($_POST['signUp']=="1"){
+            // Sign Up Process : 
 
-            print_r($_POST);
-            // IF not Exists, Control Flow.. Add email password to the Database
-            $signInQuery="INSERT INTO `users` (`email`,`password`) VALUES ('".mysqli_real_escape_string($link,$_POST['email'])."','".mysqli_real_escape_string($link,$_POST['password'])."')";
-            // $query="INSERT into `users`(`email`,`password`) VALUES ('".$_POST['email']."','".$_POST['password']."')";
-            if(!($signInResult=mysqli_query($link,$signInQuery))){
-            // if(!$signInResult){
-                // Some error in running INSERT Operation
-                $error.="<div class='alert alert-danger' role='alert'>Could not Sign You Up ! Please Try again later. It's not you, it's us ..</div>";
+            // Checking if Email already Exists
+            $query="SELECT `id` FROM `users` WHERE `email`='$_POST[email]' LIMIT 1";
+            $result=mysqli_query($link,$query);
+            if(mysqli_num_rows($result)>0){
+                // IF Exists 
+                $error.="<p class='alert alert-warning' role='alert'>Your Email Id is already present in the Database</p>";
             }else{
-                // Control Flow 
+                // IF not Exists
+                $query="INSERT into `users`(`email`,`password`) VALUES('".mysqli_real_escape_string($link,$_POST['email'])."','".mysqli_real_escape_string($link,$_POST['password'])."')";
+                $result=mysqli_query($link,$query);
+                if(!$result){
+                    // Some error in running INSERT Operation
+                    $error.="Could not Sign You Up ! Please Try again later.";
+                }else{
+                    // Control Flow 
 
-                // Password Encryption
-                $encrypt=md5(md5(mysqli_insert_id($link)).$_POST['password']);
-                $id=mysqli_insert_id($link);
-                $encryptQuery="UPDATE `users` SET `password`='".$encrypt."' WHERE `id`='".$id."'";
-                if($encryptResult=mysqli_query($link,$encryptQuery)){
-                $_SESSION['id']=$id;
+                    // Password Encryption
+                    $encrypt=md5(md5(mysqli_insert_id($link)).$_POST['password']);
+                    $id=mysqli_insert_id($link);
+                    $query="UPDATE `users` SET `password`='$encrypt' WHERE `id`='$id'";
+                    mysqli_query($link,$query);
+                    $_SESSION['id']=$id;
 
-                // Once Logged In , Set Cookie --> Here for 1 year 
-        //         if($_POST['loggedIn']=='1'){
-        //           setcookie('id','$id',time()+(60*60*24*365));
-        //         }
+                    // Once Logged In , Set Cookie --> Here for 1 year 
+                    if($_POST['loggedIn']=='1'){
+                      setcookie('id','$id',time()+(60*60*24*365));
+                    }
 
-        //         // head over to Diary Page 
-        //         header("Location:diaryPage.php");
-                   echo "<div class='alert alert-success' role='alert'>Successfully Signed Up !!</div>";
+                    // head over to Diary Page 
+                    header("Location:diaryPage.php");
+                    # echo "<div class='alert alert-success' role='alert'>Successfully Signed Up !!</div>";
                 }
             }
-          }
-        
-      }
-      // else{
-      //   // Sign in Process : 
-      //   $query="SELECT * FROM `users` WHERE `email`='".mysqli_real_escape_string($link,$_POST['email'])."'";
-      //   $result=mysqli_query($link,$query);
-      //   $row=mysqli_fetch_array($result);
-      //   if(isset($row)){
-      //     $hashedPassword=md5(md5($row['id']).$_POST['password']);
-      //     if($hashedPassword==$row['password']){
-      //       $_SESSION['id']=$row['id'];
-      //       if($_POST['loggedIn']=='1'){
-      //         setcookie('id',$row['id'],time()+(60*60*24*365));
-      //       }
-      //       header("Location:diaryPage.php");
-      //     }else{
-      //       $error="<div class='alert alert-danger' role='alert'>Your password did not match !!</div>";
-      //     }
-      //   }else{
-      //     $error="<div class='alert alert-danger' role='alert'>Email Couldn't be found !!</div>";
-      //   }
-      // } 
+          }else{
+            // Sign in Process : 
+            $query="SELECT * FROM `users` WHERE `email`='".mysqli_real_escape_string($link,$_POST['email'])."'";
+            $result=mysqli_query($link,$query);
+            $row=mysqli_fetch_array($result);
+            if(isset($row)){
+              $hashedPassword=md5(md5($row['id']).$_POST['password']);
+              if($hashedPassword==$row['password']){
+                $_SESSION['id']=$row['id'];
+                if($_POST['loggedIn']=='1'){
+                  setcookie('id',$row['id'],time()+(60*60*24*365));
+                }
+                header("Location:diaryPage.php");
+              }else{
+                $error="<div class='alert alert-danger' role='alert'>Your password did not match !!</div>";
+              }
+            }else{
+              $error="<div class='alert alert-danger' role='alert'>Email Couldn't be found !!</div>";
+            }
+          } 
+        }
     }
-  }
 ?>
 
-<?php include("Header.php"); ?>
+<?php include("Header.php"); ?> 
 
   <style type="text/css">
     .form-text{
@@ -143,7 +148,7 @@
 
       </form>
 
-      <p id="alreadyLogged">Already A User ? Log In !</p>
+      <p>Already A User ? Log In !</p>
 
       <button title="Already A User ?" class="btn btn-info" id="logInChoice">Log In</button>
 
@@ -173,30 +178,24 @@
         <button type="submit" name="submit" class="btn btn-success" style="margin-top:8px;">Log In</button>
     
     </form>
-    <p id="newUser">New User ? Sign Up Now ..</p>
     <button title="New User ?" class="btn btn-info" id="signUpChoice" style="margin-top:8px;">Sign Up</button>
+
   </div>
 
   <script type="text/javascript">
-    
     $("#signUpChoice").hide();
-    $("#newUser").hide();  
 
     $("#logInChoice").click(function(){
       $("#signingUp").toggle(); 
       $("#logInChoice").toggle();
       $("#signUpChoice").toggle();
-      $("#loggingIn").toggle();  
-      $("#alreadyLogged").toggle();
-      $("#newUser").toggle();  
+      $("#loggingIn").toggle();    
     });
 
     $("#signUpChoice").click(function(){
       $("#signingUp").toggle(); 
       $("#logInChoice").toggle();
       $("#signUpChoice").toggle();
-      $("#alreadyLogged").toggle();  
-      $("#newUser").toggle();  
       $("#loggingIn").toggle();    
     });
 
